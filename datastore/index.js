@@ -18,7 +18,7 @@ exports.create = (text, callback) => {
     var id = string;
     items[id] = text;
 
-    fs.writeFile(`./datastore/data/${id}.txt`, text, err => {
+    fs.writeFile((`./datastore/data/${id}.txt`, text), err => {
       if (err) {
         throw ('error writing file');
       }
@@ -33,6 +33,20 @@ exports.readAll = (callback) => {
   });
   callback(null, data);
 };
+
+// exports.readOne = (id, callback) => {
+//   // fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
+//   //   if (err) {
+//   //     cb(null, 0)
+//   //   } else {
+//   //     if (!fileData) {
+//   //       cb(/)
+//   //     } else {
+//   //       cb()
+//   //     }
+//   //   }
+//   // });
+// }
 
 exports.readOne = (id, callback) => {
   var text = items[id];
