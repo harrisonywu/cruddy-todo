@@ -14,15 +14,18 @@ var items = {};
 // };
 
 exports.create = (text, callback) => {
+  // text is our passed in data from POST request
   counter.getNextUniqueId(string => {
+    //string is our zeroPaddedNumber
     var id = string;
     items[id] = text;
 
-    fs.writeFile((`./datastore/data/${id}.txt`, text), err => {
+    fs.writeFile(`./datastore/data/${id}.txt`, text, err => {
       if (err) {
         throw ('error writing file');
       }
     });
+    //not sure what this callback below does
     callback(null, {id: id, text: text});
   });
 };

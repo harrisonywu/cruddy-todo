@@ -39,7 +39,7 @@ const writeCounter = (count, callback) => {
 // Public API - Fix this function //////////////////////////////////////////////
 
 exports.getNextUniqueId = (cb) => {
- readCounter((err, count) => {
+  readCounter((err, count) => {
     if (err) {
       console.log('error occured: ', err);
       cb(null, 0);
