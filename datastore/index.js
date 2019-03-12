@@ -33,17 +33,38 @@ exports.create = (text, callback) => {
 
 
 
+// exports.readAll = (callback) => {
+//   var data = _.map(items, (text, id) => {
+//     return { id, text };
+//   });
+//   callback(null, data);
+// };
+
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
+  var data = []; 
+  if (!data) return [];
+  _.each(items, (item, index) => {
+    data.push({id: index, text: items[index]});
   });
-  callback(null, data);
+  console.log(data);
+  fs.readdir(`${exports.dataDir}/`, (err, files) => {
+    if (err) {
+      throw ('error reading files');
+    } else {
+      files.forEach((fileName) => {
+        data.push({id: fileName, text: fileName});
+      });
+      callback(null, 0);
+    }
+  });
+  return data;
+
 };
 
 exports.readOne = (id, callback) => {
   fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
     if (err) {
-      cb(null, 0)
+      cb(null, 0);
     } else {
       if (!fileData) {
         cb('No item with the id:', id);
