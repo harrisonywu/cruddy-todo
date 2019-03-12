@@ -116,6 +116,8 @@ describe('todos', () => {
     });
 
     // Refactor this test when completing `readAll`
+
+    //when we are done with promises, fix the text key in this test
     it('should return an array with all saved todos', (done) => {
       const todo1text = 'todo 1';
       const todo2text = 'todo 2';

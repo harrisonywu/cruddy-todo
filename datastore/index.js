@@ -59,18 +59,30 @@ exports.readAll = (callback) => {
   // return data;
 };
 
+// exports.readOne = (id, callback) => {
+//   fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
+//     if (err) {
+//       cb(null, 0);
+//     } else {
+//       if (!fileData) {
+//         cb('No item with the id:', id);
+//       } else {
+//         cb(null, {id: id, text: (fileData).toString()});
+//       }
+//     }
+//   });
+// };
+
 exports.readOne = (id, callback) => {
-  fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
+  fs.readFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
+    console.log(typeof(fileData));
     if (err) {
-      cb(null, 0);
+      callback(new Error(`No item with id: ${id}`));
     } else {
-      if (!fileData) {
-        cb('No item with the id:', id);
-      } else {
-        cb(null, {id: id, text: (fileData).toString()});
-      }
+      fileData = (fileData).toString();
+      callback(null, { id, text: fileData });
     }
-  });
+  })
 };
 
 // exports.readOne = (id, callback) => {
