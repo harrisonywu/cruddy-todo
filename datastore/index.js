@@ -62,16 +62,16 @@ exports.update = (id, text, callback) => {
     if (err) {
       callback(new Error(`No item with id: ${id}`)); 
     } else {
-        fs.writeFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
-          console.log('our input text: ', fileData);
-          if (err) {
-            throw 'error writing file';
-          } else {
-            callback(null, { id, text: fileData});
-          }
-        })
+      fs.writeFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
+        console.log('our input text: ', fileData);
+        if (err) {
+          throw 'error writing file';
+        } else {
+          callback(null, { id, text: fileData});
+        }
+      });
     }
-  })
+  });
 
 };
 // exports.update = (id, text, callback) => {
