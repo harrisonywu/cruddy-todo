@@ -15,20 +15,23 @@ var items = {};
 
 exports.create = (text, callback) => {
   // text is our passed in data from POST request
-  counter.getNextUniqueId(string => {
+  counter.getNextUniqueId((err, string) => {
+    console.log(string);
     //string is our zeroPaddedNumber
     var id = string;
     items[id] = text;
 
-    fs.writeFile(`./datastore/data/${id}.txt`, text, err => {
+    fs.writeFile(`${exports.dataDir}/${id}.txt`, text, function(err) {
       if (err) {
         throw ('error writing file');
       }
+      callback(null, {id: id, text: text});
     });
     //not sure what this callback below does
-    callback(null, {id: id, text: text});
   });
 };
+
+
 
 exports.readAll = (callback) => {
   var data = _.map(items, (text, id) => {
@@ -37,28 +40,28 @@ exports.readAll = (callback) => {
   callback(null, data);
 };
 
-// exports.readOne = (id, callback) => {
-//   // fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
-//   //   if (err) {
-//   //     cb(null, 0)
-//   //   } else {
-//   //     if (!fileData) {
-//   //       cb(/)
-//   //     } else {
-//   //       cb()
-//   //     }
-//   //   }
-//   // });
-// }
-
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
+    if (err) {
+      cb(null, 0)
+    } else {
+      if (!fileData) {
+        cb('No item with the id:', id);
+      } else {
+        cb(null, {id: id, text: (fileData).toString()});
+      }
+    }
+  });
 };
+
+// exports.readOne = (id, callback) => {
+//   var text = items[id];
+//   if (!text) {
+//     callback(new Error(`No item with id: ${id}`));
+//   } else {
+//     callback(null, { id, text });
+//   }
+// };
 
 exports.update = (id, text, callback) => {
   var item = items[id];
