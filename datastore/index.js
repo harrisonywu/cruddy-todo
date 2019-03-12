@@ -52,18 +52,31 @@ exports.readOne = (id, callback) => {
 
 /* update notes
 goal: rewrite the todo item stores in dataDir based on its ID
-  functionality: when we update the form, we'll change the text that is within that todo's id file
+functionality: when we update the form, we'll change the text that is within that todo's id file
 
 */
 
 
+// exports.update = (id, text, callback) => {
+
+//   fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err, text) => {
+//     if (err) {
+//         callback(new Error(`No item with id: ${id}`));
+//       } else {
+//         callback(null, { id, text});
+//       }
+//   });
+// };
+
+
+// text parameter below is the updated text
 exports.update = (id, text, callback) => {
   fs.readFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
     if (err) {
       callback(new Error(`No item with id: ${id}`)); 
     } else {
-      fs.writeFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
-        console.log('our input text: ', fileData);
+      fileData = text;
+      fs.writeFile(`${exports.dataDir}/${id}.txt`, fileData, (err, fileData) => {
         if (err) {
           throw 'error writing file';
         } else {
@@ -72,8 +85,8 @@ exports.update = (id, text, callback) => {
       });
     }
   });
-
 };
+
 // exports.update = (id, text, callback) => {
 //   var item = items[id];
 //   if (!item) {
