@@ -21,44 +21,42 @@ exports.create = (text, callback) => {
     var id = string;
     items[id] = text;
 
-    fs.writeFile(`${exports.dataDir}/${id}.txt`, text, function(err) {
+    fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err) => {
       if (err) {
         throw ('error writing file');
       }
       callback(null, {id: id, text: text});
     });
-    //not sure what this callback below does
   });
 };
 
 
 
+
 // exports.readAll = (callback) => {
 //   var data = _.map(items, (text, id) => {
-//     return { id, text };
+//     return { id: text };
 //   });
 //   callback(null, data);
 // };
 
 exports.readAll = (callback) => {
   var data = []; 
-  if (!data) return [];
-  _.each(items, (item, index) => {
-    data.push({id: index, text: items[index]});
-  });
-  console.log(data);
   fs.readdir(`${exports.dataDir}/`, (err, files) => {
     if (err) {
       throw ('error reading files');
     } else {
       files.forEach((fileName) => {
+        fileName = fileName.slice(0, -4);
         data.push({id: fileName, text: fileName});
+        // console.log('2nd test', data);
+        // console.log('files test:', files);
       });
-      callback(null, 0);
+      console.log('OUR DATA: ', data);
+      callback(null, data);
     }
   });
-  return data;
-
+  // return data;
 };
 
 exports.readOne = (id, callback) => {
