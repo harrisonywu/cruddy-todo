@@ -7,20 +7,12 @@ var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
-// exports.create = (text, callback) => {
-//   var id = counter.getNextUniqueId();
-//   items[id] = text;
-//   callback(null, { id, text });
-// };
-
 exports.create = (text, callback) => {
-  // text is our passed in data from POST request
   counter.getNextUniqueId((err, string) => {
     console.log(string);
     //string is our zeroPaddedNumber
     var id = string;
     items[id] = text;
-
     fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err) => {
       if (err) {
         throw ('error writing file');
@@ -29,16 +21,6 @@ exports.create = (text, callback) => {
     });
   });
 };
-
-
-
-
-// exports.readAll = (callback) => {
-//   var data = _.map(items, (text, id) => {
-//     return { id: text };
-//   });
-//   callback(null, data);
-// };
 
 exports.readAll = (callback) => {
   var data = []; 
@@ -49,29 +31,12 @@ exports.readAll = (callback) => {
       files.forEach((fileName) => {
         fileName = fileName.slice(0, -4);
         data.push({id: fileName, text: fileName});
-        // console.log('2nd test', data);
-        // console.log('files test:', files);
       });
       console.log('OUR DATA: ', data);
       callback(null, data);
     }
   });
-  // return data;
 };
-
-// exports.readOne = (id, callback) => {
-//   fs.readFile(`./datastore/data/${id}`, (err, fileData) => {
-//     if (err) {
-//       cb(null, 0);
-//     } else {
-//       if (!fileData) {
-//         cb('No item with the id:', id);
-//       } else {
-//         cb(null, {id: id, text: (fileData).toString()});
-//       }
-//     }
-//   });
-// };
 
 exports.readOne = (id, callback) => {
   fs.readFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
@@ -82,27 +47,42 @@ exports.readOne = (id, callback) => {
       fileData = (fileData).toString();
       callback(null, { id, text: fileData });
     }
-  })
+  });
 };
 
-// exports.readOne = (id, callback) => {
-//   var text = items[id];
-//   if (!text) {
+/* update notes
+goal: rewrite the todo item stores in dataDir based on its ID
+  functionality: when we update the form, we'll change the text that is within that todo's id file
+
+*/
+
+
+exports.update = (id, text, callback) => {
+  fs.readFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`)); 
+    } else {
+        fs.writeFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
+          console.log('our input text: ', fileData);
+          if (err) {
+            throw 'error writing file';
+          } else {
+            callback(null, { id, text: fileData});
+          }
+        })
+    }
+  })
+
+};
+// exports.update = (id, text, callback) => {
+//   var item = items[id];
+//   if (!item) {
 //     callback(new Error(`No item with id: ${id}`));
 //   } else {
+//     items[id] = text;
 //     callback(null, { id, text });
 //   }
 // };
-
-exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
-};
 
 exports.delete = (id, callback) => {
   var item = items[id];
