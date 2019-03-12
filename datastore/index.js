@@ -50,63 +50,46 @@ exports.readOne = (id, callback) => {
   });
 };
 
-/* update notes
-goal: rewrite the todo item stores in dataDir based on its ID
-functionality: when we update the form, we'll change the text that is within that todo's id file
-
-*/
-
-
-// exports.update = (id, text, callback) => {
-
-//   fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err, text) => {
-//     if (err) {
-//         callback(new Error(`No item with id: ${id}`));
-//       } else {
-//         callback(null, { id, text});
-//       }
-//   });
-// };
-
-
-// text parameter below is the updated text
 exports.update = (id, text, callback) => {
   fs.readFile(`${exports.dataDir}/${id}.txt`, (err, fileData) => {
     if (err) {
-      callback(new Error(`No item with id: ${id}`)); 
+      callback(err); 
     } else {
-      fileData = text;
-      fs.writeFile(`${exports.dataDir}/${id}.txt`, fileData, (err, fileData) => {
-        if (err) {
-          throw 'error writing file';
-        } else {
-          callback(null, { id, text: fileData});
-        }
+      fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (fileData) => {
+        callback(null, { id, text: fileData});
       });
     }
   });
 };
 
-// exports.update = (id, text, callback) => {
-//   var item = items[id];
+exports.delete = (id, callback) => {
+  fs.readFile(`${exports.dataDir}/${id}.txt`, (err, data) => {
+    if (err) {
+      console.log(err);
+      callback(err);
+    } else {
+      fs.unlink(`${exports.dataDir}/${id}.txt`, (err, data) => {
+        callback();
+      });
+    }
+  })
+}
+
 //   if (!item) {
-//     callback(new Error(`No item with id: ${id}`));
+//     // report an error if item not found
 //   } else {
-//     items[id] = text;
-//     callback(null, { id, text });
 //   }
 // };
-
-exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
-};
+// exports.delete = (id, callback) => {
+//   var item = items[id];
+//   delete items[id];
+//   if (!item) {
+//     // report an error if item not found
+//     callback(new Error(`No item with id: ${id}`));
+//   } else {
+//     callback();
+//   }
+// };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
